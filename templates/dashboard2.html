@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h2 class="mt-4 mb-4">My Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Parking Status1</h3>
+    <ul>
+        {% for space_id, status1 in parking_status1.items() %}
+            <li>Parking Space {{ space_id }}: <span class="{{ status1 }}">{{ status1 }}</span></li>
+        {% endfor %}
+
+    </ul>
+                    </p>
+                    <canvas id="widget1-chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Parking </h5>
+                    <p class="card-text">
+                    </p>
+                    <canvas id="widget2-chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+    <script>
+
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+
+        socket.on('update_data', function(data) {
+            document.getElementById('widget1-data').innerText = data.widget1.toFixed(2);
+            document.getElementById('widget2-data').innerText = data.widget2.toFixed(2);
+
+            updateChart('widget1-chart', data.widget1);
+            updateChart('widget2-chart', data.widget2);
+        });
+
+        function updateChart(canvasId, value) {
+            var ctx = document.getElementById(canvasId).getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Data'],
+                    datasets: [{
+                        label: 'Real-time Data',
+                        data: [value],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales:
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+<script>
+  // تحديث الصفحة كل 5 ثوانٍ
+  setInterval(function() {
+    location.reload();
+  }, 1000); // تعديل هذه القيمة وفقًا للفترة التي تريدها
+</script>
+
+{% endblock %}
+
+
+<title>Parking Status1</title>
+    <style>
+        .vacant {
+            color: green; /* لون الخط الأخضر للمواقف الشاغرة */
+        }
+        .occupied {
+            color: red; /* لون الخط الأحمر للمواقف المحجوزة */
+        }
+    </style>
+    <h1>Parking Status</h1>
+    <div>
+        <p>Parking Space 1 Status:
+            {% if parking_status1.get(1) == 'vacant' %}
+                <span class="vacant">Vacant</span>
+            {% else %}
+                <span class="occupied">Occupied</span>
+            {% endif %}
+        </p>
+        <!-- اكمل بقية المواقف -->
+    </div>

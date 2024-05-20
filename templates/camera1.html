@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>صفحة الحجوزات</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>قائمة الحجوزات</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>رقم الحجز</th>
+                <th>رقم الفضاء</th>
+                <th>التاريخ</th>
+                <th>الوقت</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.id }}</td>
+                <td>{{ booking.space_id }}</td>
+                <td>{{ booking.date }}</td>
+                <td>{{ booking.time }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

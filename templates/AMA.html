@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block title %}الحجز للمراب {% endblock %}
+{% block AMA %}
+    <h1>حجز مرآب سيارات</h1>
+    <form action="{{ url_for('AMA') }}" method="post">
+        <label for="name">اسم الشخص:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="car_number">رقم السيارة:</label>
+        <input type="text" id="car_number" name="car_number" required>
+        <br>
+        <label for="car_type">نوع السيارة:</label>
+        <input type="text" id="car_type" name="car_type" required>
+        <br>
+        <label for="phone_number">رقم هاتف الشخص:</label>
+        <input type="text" id="phone_number" name="phone_number" required>
+        <br>
+        <label for="date">التاريخ:</label>
+        <input type="date" id="date" name="date" required>
+        <br>
+        <label for="time">الوقت:</label>
+        <input type="time" id="time" name="time" required>
+        <br>
+        <label for="time">رقم الموقف:</label>
+        <input type="text" id="space_id" name="space_id" required>
+        <br>
+        <label for="position">موقع الموقف:</label>
+        <input type="text" id="position" name="position" required>
+
+        <input type="submit" value="حجز">
+    </form>
+{% endblock %}
+    <div class="container mt-4">
+        {% block success %}{% endblock %}
+    </div>

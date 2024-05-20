@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera and QR Code Reader</title>
+</head>
+<body>
+    <h1>Camera and QR Code Reader</h1>
+    <img src="{{ url_for('video_feed2') }}" style="width:50%">
+    <div id="qr_data"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function getQRData() {
+            $.get("/qr_data", function(data) {
+                $("#qr_data").text("QR Code Data: " + data);
+            });
+        }
+
+        setInterval(getQRData, 1000);
+    </script>
+</body>
+</html>

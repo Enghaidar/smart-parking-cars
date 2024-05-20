@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+       <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=2">
+    <title>{% block title %}My Dashboard{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .occupied {
+            color: #d9534f;
+        }
+        .vacant {
+            color: #5cb85c;
+        }
+    </style>
+    {% block styles %}{% endblock %}
+    <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+        <title>Booking Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .success-message {
+            margin-top: 50px;
+            font-size: 24px;
+            color: green;
+        }
+        a {
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">My Dashboard</a>
+        <img src="{{image_path}}" alt="الشعار"  width="50px">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-lg-row flex-wrap">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/AMA">حجز</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/video_feed2">camera</a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+        {% block AMA %}{% endblock %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% block scripts %}{% endblock %}
+
+     <h1>Camera QR Code Reader</h1>
+    <video id="video" width="400" height="300" autoplay></video>
+    <button id="snap">Snap Photo</button>
+    <canvas id="canvas" width="400" height="300" style="display: none;"></canvas>
+    <div id="qrResult"></div>
+          <h1>Scan QR Code</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*">
+        <button type="submit">Scan QR Code</button>
+    </form>
+
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+
+        document.getElementById('snap').addEventListener('click', function() {
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            var dataURL = canvas.toDataURL('image/png');
+
+            $.ajax({
+                type: "POST",
+                url: "/scan_qr",
+                data: { image: dataURL },
+                success: function(response) {
+                    $('#qrResult').text(response);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
